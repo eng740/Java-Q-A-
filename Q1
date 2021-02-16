@@ -1,0 +1,144 @@
+//Question 1
+//==========
+//given a list of numbers, for example: 1, 7, 2, 3, 19, 5
+//if you sort them (ascending order) they will look like: 1, 2, 3, 5, 7, 19
+//however we want to sort them in a "funny" way, where the sort order is like:
+//largest number,  second largest, smallest number, second smallest, Third largest, fourth largest, third smallest, fourth smallest…
+//For the above example the funny sort will look like: 19, 7, 1, 2, 5, 3
+//Implement a method that gets a list of numbers, and returns a funny sorted list. The Java signature would look like:
+//List<Integer> funnySort(List<Integer> unsorted) {...}
+
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Q1 {
+	private static ArrayList<Integer> inputArray = new ArrayList<Integer>();
+
+	public Q1(ArrayList<Integer> inputArray){
+		Q1.inputArray = inputArray;
+	}
+
+	public void startQuickStart(int start,int end){
+		int q;
+		if(start<end){
+			q = partition(start, end);
+			startQuickStart(start, q);
+			startQuickStart(q+1, end);
+		}
+	}
+
+	public ArrayList<Integer> getSortedArray(){
+		return Q1.inputArray;
+	}
+
+	int partition(int start,int end){
+
+		int init = start;
+		int length = end;
+
+		Random r = new Random();
+		int pivotIndex = nextIntInRange(start,end,r);
+		int pivot = inputArray.get(pivotIndex);
+
+		//		System.out.println("Pivot Element "+pivot+" at index:"+pivotIndex);
+
+		while(true){
+			while(inputArray.get(length)>pivot && length>start){
+				length--;
+			}
+
+			while(inputArray.get(init)<pivot && init<end){
+				init++;
+			}
+
+			if(init<length){
+				int temp;
+				temp = inputArray.get(init);
+				inputArray.set(init,inputArray.get(length));
+				inputArray.set(length,temp);
+				length--;
+				init++;
+
+				for(int i=start;i<=end;i++){
+				}
+			}else{
+				return length;
+			}
+		}
+
+	}
+
+	// Below method is to just find random integer from given range
+	static int nextIntInRange(int min, int max, Random rng) {
+		if (min > max) {
+			throw new IllegalArgumentException("Cannot draw random int from invalid range [" + min + ", " + max + "].");
+		}
+		int diff = max - min;
+		if (diff >= 0 && diff != Integer.MAX_VALUE) {
+			return (min + rng.nextInt(diff + 1));
+		}
+		int i;
+		do {
+			i = rng.nextInt();
+		} while (i < min || i > max);
+		return i;
+	}
+
+
+
+
+	public static void main(String[] args) {
+
+		ArrayList<Integer> unsortedArray = new ArrayList<Integer>();
+
+		unsortedArray.add(1);
+		unsortedArray.add(7);
+		unsortedArray.add(2);
+		unsortedArray.add(3);
+		unsortedArray.add(19);
+		unsortedArray.add(5);
+
+		QuickSort qsu = new QuickSort(unsortedArray);
+		System.out.println("---------Initial Unsorted Array---------");
+		for(int i:qsu.getSortedArray()){
+			System.out.print(i+" ");
+		}
+
+		qsu.startQuickStart(0, unsortedArray.size()-1);
+
+		System.out.println("\n\n---------Processed sorted Array---------");
+
+
+		int a,b;
+		int x,z;
+		for(int i:qsu.getSortedArray()){
+
+			System.out.print(i+" ");
+		}
+		System.out.println();
+
+		ArrayList<Integer> sortedArray = new ArrayList<Integer>();
+		sortedArray = qsu.getSortedArray();
+		System.out.println();
+
+		for(int j=sortedArray.size()-1; j>=0; j--){
+			for (int i=0; j>i ;j--) {
+
+				a = sortedArray.get(i);
+				b = sortedArray.get(i+1);
+				z = sortedArray.get(j);
+				x = sortedArray.get(j-1);
+				
+				sortedArray.set(j-i,sortedArray.get(j));
+
+		
+			}//end of j
+
+		}//end of for i
+
+		for(int i:sortedArray){
+			System.out.print(i+" ");
+		}
+
+	}//end of main
+}
